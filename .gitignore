@@ -1,0 +1,7 @@
+*.ply
+*.pyc
+*.csv
+*.zip
+*.pdf
+__init__.py
+/__pycache__/
