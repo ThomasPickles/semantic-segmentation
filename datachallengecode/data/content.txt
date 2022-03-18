@@ -1,0 +1,9 @@
+./xtrain
+./xtrain/SCAN_1.ply
+./xtrain/SCAN_0.ply
+./ytrain.csv
+./xtrain.zip
+./y_random.csv
+./visu
+./visu/SCAN_1_VISU.ply
+./ytrain_map_ind_station.csv
