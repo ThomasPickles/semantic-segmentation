@@ -5,3 +5,4 @@
 *.pdf
 __init__.py
 /__pycache__/
+!*_map_ind_station.csv
