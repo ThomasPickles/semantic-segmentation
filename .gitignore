@@ -1,8 +1,7 @@
 *.ply
-*.pyc
-*.csv
 *.zip
 *.pdf
+*.pyc
+predictions.csv
 __init__.py
 /__pycache__/
-!*_map_ind_station.csv
