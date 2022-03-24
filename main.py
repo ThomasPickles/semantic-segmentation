@@ -99,9 +99,9 @@ def train_and_test(dir, visualise):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Train model.')
-    parser.add_argument('-p', '--data-path', dest="data", type=str,
-                        default="./data-sample",
-                        help='Specify the path to the data folder')
+    parser.add_argument('--full', dest="data", action='store_const',
+                        const="./data-full", default="./data-sample",
+                        help='Use all data (default is a sample)')
     parser.add_argument('--no-vis', dest="vis", action='store_false',
                         help='Dont generate CloudCompare files')
     args = parser.parse_args()
