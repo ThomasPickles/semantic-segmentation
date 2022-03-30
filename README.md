@@ -18,4 +18,5 @@ The truth-value files and prediction files are generated into /visu and can be r
 
 ### Todo:
 - [x] Make a test/train work with simple model
+- [ ] Fix bug with indexing when using non-contiguous training/test data, eg 0-30,37...
 - [ ] Try out another model from the Keras examples [Point cloud segmentation model](https://keras.io/examples/vision/pointnet_segmentation/)
