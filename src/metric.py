@@ -1,7 +1,7 @@
 
 import numpy as np
 from sklearn.metrics import f1_score
-from load_data import load_yfile
+from . import load_data
 
 
 def softmax(x):
@@ -34,6 +34,6 @@ def mean_average_presicion_score(y_true, y_scores, n_classes: int) -> float:
 
 
 def apply_my_metric(zipfile, y_true, n_classes=10):
-    pred = load_yfile(zipfile)
+    pred = load_data.load_yfile(zipfile)
     score = mean_average_presicion_score(y_true, pred, n_classes)
     return score

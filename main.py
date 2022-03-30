@@ -7,7 +7,7 @@ import argparse
 from sklearn.linear_model import LinearRegression
 import numpy as np
 from src import load_data
-# from src import metric
+from src import metric
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
@@ -60,6 +60,9 @@ def test_model(x_by_station, target, points_map, model, visualise):
 
     predictions = model.predict(X)
     print("Finished making predictions.\n")
+
+    score = metric.mean_average_presicion_score(y, predictions, 10)
+    print(f"Score obtained : {score}")
 
     path_predictions = "predictions.csv"
     with open(path_predictions, "w") as f:

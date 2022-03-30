@@ -105,13 +105,11 @@ def save_ptcloud_withGT(x: Dict, y: np.ndarray, station2index, savedir):
             os.makedirs(savedir)
 
     for station in x:
-        print(f"shape y : {y.shape}")
         features = x[station]
         classes = y
         coord = features[:, :3]
         rgb = features[:, 3:6]
         intensity = features[:, 6]
-        print(f"shape rgb : {rgb.shape}")
 
         coord = np.array([tuple(x) for x in coord], dtype=[
                          ('x', 'f4'), ('y', 'f4'), ('z', 'f4')])
