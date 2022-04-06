@@ -28,14 +28,14 @@ def get_combined_station_data(x_by_station, target, points_map):
     for station in x_by_station:
         ind_s, ind_e = points_map[station]
         station_X = x_by_station[station]
-        X = np.concatenate([X, station_X])
+        X = np.concatenate([X, station_X[ind_s:ind_e+1]])
         y = np.concatenate([y, target[ind_s:ind_e+1]])
     print(f"dim of X is {X.shape}")
     print(f"dim of y is {y.shape}")
     return X, y
 
 
-def get_trained_model(x_by_station, target, points_map):
+def get_trained_model(x_by_station, target, points_map, loss, penalty, alpha, max_iter, learning_rate, eta0, tol, early_stopping, validation_fraction):
 
     print('Training on : ', load_data.get_nbpoints(x_by_station), ' points')
 
@@ -44,10 +44,38 @@ def get_trained_model(x_by_station, target, points_map):
 
     # Always scale the input. The most convenient way is to use a pipeline.
     model = make_pipeline(StandardScaler(),
-                          SGDClassifier(max_iter=1000, tol=1e-3))
-    model.fit(X, y)
+                          SGDClassifier(loss=loss, 
+                          penalty=penalty, 
+                          alpha=alpha, 
+                          l1_ratio=0.15, 
+                          fit_intercept=True, 
+                          max_iter=max_iter, 
+                          tol=tol, 
+                          shuffle=True, 
+                          verbose=0, 
+                          epsilon=0.1, 
+                          n_jobs=-1, 
+                          random_state=None, 
+                          learning_rate=learning_rate, 
+                          eta0=eta0, 
+                          power_t=0.5, 
+                          early_stopping=early_stopping, 
+                          validation_fraction=validation_fraction, 
+                          n_iter_no_change=5, 
+                          class_weight=None, 
+                          warm_start=False, 
+                          average=False))
 
+    model.fit(X,y)
+
+    # Output training error
+    train_loss = model.score(X, y)
+    print(f"train_loss = {train_loss}")
+    with open("train_error", "a") as f:
+        f.write(f"{train_loss}\n")
+        f.close()
     print("Finished training.\n")
+
     return model
 
 
@@ -59,6 +87,13 @@ def test_model(x_by_station, target, points_map, model, visualise):
         x_by_station, target, points_map)
 
     predictions = model.predict(X)
+
+    # Output test error
+    test_loss = model.score(X, y)
+    print(f"test_loss = {test_loss}")
+    with open("test_error", "a") as f:
+        f.write(f"{test_loss}\n")
+        f.close()
     print("Finished making predictions.\n")
 
     score = metric.mean_average_presicion_score(y, predictions, 10)
@@ -94,8 +129,27 @@ def train_and_test(dir, visualise):
     xtrain = load_data.load_xfile(path_x_train)
     xtest = load_data.load_xfile(path_x_test)
 
-    model = get_trained_model(xtrain, target_values, points_map)
+    # Initialization of hyperparameters
+    loss = 'hinge'              #loss function
+    penalty = 'l2'              #for normalization
+    alpha = 0.0001              #alpha
+    max_iter = 1000             #number of training iterations
+    learning_rate = 'optimal'   #learning rate mode
+    eta0 = 0                    #learning rate init
+    tol = 0.001                 #tolerance to stop the algo
+    early_stopping = False      #to do cross validation
+    validation_fraction = 0.1   #to do cross validation
 
+    # Erase the content of output files
+    with open("test_error", "w") as f: f.close()
+    with open("train_error", "w") as f: f.close()
+    with open("measured", "w") as f: f.close()
+
+    # Loop
+    # with open("measured", "a") as f:
+    #     f.write(f"{alpha}\n")
+    #     f.close()
+    model = get_trained_model(xtrain, target_values, points_map, loss, penalty, alpha, max_iter, learning_rate, eta0, tol, early_stopping, validation_fraction)
     test_model(xtest, target_values, points_map, model, visualise)
 
 
